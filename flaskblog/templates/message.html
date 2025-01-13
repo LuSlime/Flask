@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="chat-wrapper">
+
+    <div class="chat-container">
+        <img class="rounded-circle account-img" 
+                src="{{ url_for('static', filename='profile_pics/' + friend.image_file) }}" 
+                alt="{{ friend.username }}">
+            <a class="username">{{ friend.username }}</a>
+        <!-- Scrollable container for messages -->
+        <div class="messages-wrapper" id="messages-wrapper">
+            {% for chat in chats %}
+            <div class="chat-message {% if chat.sender == current_user.username %}outgoing{% else %}incoming{% endif %}">
+                {% if chat.image_file %}
+                <img src="{{ url_for('static', filename='chat_pics/' + chat.image_file) }}" class="chat-image" alt="Image">
+                {% endif %}
+                {% if chat.message %}
+                <p class="message-text">{{ chat.message }}</p>
+                {% endif %}
+                <div class="message-info">
+                    <span class="time">{{ chat.timestamp.strftime('%I:%M %p') }}</span><br>
+                    <span class="date">{{ chat.timestamp.strftime('%Y-%d-%m') }}</span>
+                </div>
+                
+            </div>
+            {% endfor %}
+        </div>
+
+
+        
+        <!-- Message form -->
+        <form class="message-form" action="" method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="input-group">
+                {{ form.message(class="form-control chat-input", placeholder="Type your message...") }}
+                <div class="input-group-append">
+                    {{ form.picture(class="form-control-file chat-file") }}
+                </div>
+                <button type="submit" class="btn btn-send">
+                    <i class="fa fa-paper-plane"></i> Send
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- JavaScript for auto-scroll -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const messagesWrapper = document.getElementById("messages-wrapper");
+        if (messagesWrapper) {
+            messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
+        }
+    });
+</script>
+
+
+{% endblock content %}

@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<div class="friends-container">
+    <div class="friends-list">
+        {% for d in friends %}
+            <div class="media mb-4">
+                <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + d.image_file) }}" alt="{{ d.username }}">
+                <div class="media-body">
+                    <h2 class="account-heading">{{ d.username }}</h2>
+                    <p class="text-secondary">{{ d.email }}</p>
+                    <div class="message-btn-container">
+                        <form action="{{ url_for('chats.message', username=d.username) }}" method="get">
+                            <button type="submit" class="btn btn-primary">Message {{ d.username }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="divider"></div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

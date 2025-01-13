@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title mb-4">{{ legend }}</h2>
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+
+                <!-- Title Field -->
+                <div class="form-group">
+                    <label for="title" class="form-control-label">Post Title</label>
+                    {% if form.title.errors %}
+                        {{ form.title(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.title(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <!-- Picture Upload Field -->
+                <div class="form-group">
+                    <label for="picture" class="form-control-label">Upload a Picture (Optional)</label>
+                    {{ form.picture(class="form-control-file") }}
+                    {% if form.picture.errors %}
+                        <div class="text-danger">
+                            {% for error in form.picture.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group">
+                    <button type="submit" class="btn btn-outline-info btn-lg w-100">Create Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

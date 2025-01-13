@@ -1,0 +1,119 @@
+To deploy and host your project with a Flask backend, HTML frontend, and a SQLite database, we can use Render as a free and straightforward option. Render provides hosting for both the backend and the database. Below is a step-by-step guide, assuming your project is already complete and works locally.
+
+Step 1: Prepare Your Flask Project
+Organize Your Files
+Ensure your Flask project is structured as follows:
+
+bash
+Copy code
+/my-flask-app
+├── app.py                  # Main Flask file
+├── requirements.txt        # Python dependencies
+├── config.py               # Configurations (optional)
+├── /templates              # HTML files
+├── /static                 # Static files (CSS, JS, images)
+├── /instance               # Contains SQLite database (optional)
+└── /models                 # Database models (if separate)
+Install gunicorn
+Add gunicorn to your Python dependencies if not already installed. This is required to run your Flask app in production. Run:
+
+bash
+Copy code
+pip install gunicorn
+pip freeze > requirements.txt
+Add a Procfile
+Create a file named Procfile in your project root to specify the start command for your app:
+
+makefile
+Copy code
+web: gunicorn app:app
+Replace app:app with filename:app where filename is the name of your main Flask file (e.g., main.py).
+
+Update app.py for Production
+Ensure your Flask app is ready for production:
+
+Set debug=False.
+Use os.environ.get for sensitive values like SECRET_KEY and database configuration:
+python
+Copy code
+import os
+
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-secret')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///instance/site.db')
+Test Your App Locally
+Run the app with gunicorn to ensure it works:
+
+bash
+Copy code
+gunicorn app:app
+Step 2: Push Your Code to GitHub
+Initialize a Git Repository
+In your project folder, run:
+
+bash
+Copy code
+git init
+git add .
+git commit -m "Initial commit"
+Create a GitHub Repository
+
+Go to GitHub and create a new repository.
+Follow the instructions to push your local repository to GitHub:
+bash
+Copy code
+git remote add origin https://github.com/username/repository-name.git
+git branch -M main
+git push -u origin main
+Step 3: Deploy on Render
+Sign Up for Render
+Go to Render and sign up for a free account.
+
+Create a New Web Service
+
+Click "New" → "Web Service".
+Connect your GitHub repository to Render.
+Select the repository for your Flask app.
+Configure the Deployment
+
+Name: Choose a name for your service.
+Region: Select a region (choose the one closest to your audience).
+Branch: Select main.
+Build Command: Leave empty (Render will use pip install -r requirements.txt).
+Start Command: Set to gunicorn app:app.
+Instance Type: Use the free plan.
+Add Environment Variables
+
+Click "Add Environment Variable".
+Add the following:
+SECRET_KEY: Your Flask secret key.
+DATABASE_URL: Set to sqlite:///instance/site.db (for SQLite).
+Deploy
+Click "Create Web Service". Render will:
+
+Install dependencies from requirements.txt.
+Deploy your app with gunicorn.
+Test Your App
+Once deployment is complete, Render will provide a URL like https://your-app.onrender.com. Visit this URL to test your app.
+
+Step 4: Optional - Manage SQLite Database
+Persistent SQLite Storage
+By default, SQLite files will reset on each deployment. To make the database persistent:
+
+Add a /instance folder to your project (if not already present).
+Store your site.db inside this folder.
+Tell Render to Persist the Folder
+In the Render dashboard, go to your service and click "Add Disk". Specify /instance as the mount path.
+
+Step 5: Test and Debug
+Test all routes, database functionality, and static files on your hosted app.
+Check Render logs for errors:
+In the Render dashboard, go to Logs for your service.
+Step 6: Next Steps
+Set Up a Custom Domain (Optional)
+
+Render provides a free subdomain.
+You can add a custom domain if needed.
+Monitor Free Limits
+
+The free tier on Render has limits (750 hours/month, basic resources). Monitor usage in the dashboard.
+Would you like help setting up a specific step or troubleshooting?
